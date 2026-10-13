@@ -66,8 +66,8 @@ describe "Tests de Pack Premiun" {
 
 describe "Tests de Pack Provincial" {
     const coordinador = new AsistenteLogistico(estaMotivado = true, viajesRealizados = 120111, añosDeExperiencia = 2)
-    const provincial1 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 6, actividades = 5)
-    const provincial2 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 3, actividades = 2)
+    const provincial1 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 6, actividades = ["Actividad1", "Actividad2", "Actividad3", "Actividad4", "Actividad5"])
+    const provincial2 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 3, actividades = ["Actividad1", "Actividad2"])
     const beneficio1 = new BeneficioEspecial(tipo = "Traslado VIP", costo = 200, estaVigente = true)
     const beneficio2 = new BeneficioEspecial(tipo = "Seguros Adicionales", costo = 400, estaVigente = true)
     const beneficio3 = new BeneficioEspecial(tipo = "Comida natural", costo = 400, estaVigente = true)

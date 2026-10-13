@@ -35,7 +35,7 @@ class Pack {
 
 class Nacional inherits Pack {
     const provinciaDestino
-    const actividades 
+    const actividades = []
 
     override method actividades() = actividades
     override method eliminarActividad(actividad) {
@@ -60,7 +60,7 @@ class Provincial inherits Nacional {
     const cantidadCiudadesAVisitar
 
     override method cantidadCiudadesAVisitar() = cantidadCiudadesAVisitar
-    override method esPackPremiun() = self.actividades() >= 4 and self.cantidadCiudadesAVisitar() > 5 and self.beneficios().filter{n => n.estaVigente()}.count() >= 3 
+    override method esPackPremiun() = self.actividades().count() >= 4 and self.cantidadCiudadesAVisitar() > 5 and self.beneficios().filter{n => n.estaVigente()}.count() >= 3 
     override method precio() = if (self.esPackPremiun()) {super() * 1.05} else {super()}
 }
 
