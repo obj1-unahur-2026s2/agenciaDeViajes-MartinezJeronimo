@@ -22,7 +22,7 @@ class Pack {
     method esPackPremiun() 
     method cantidadCiudadesAVisitar()
     method agregarBeneficio(beneficio) {
-        if (not self.beneficios().contains(beneficio)) {
+        if (not self.beneficios().contains(beneficio) and beneficio.estaVigente()) {
             self.beneficios().add(beneficio)
         } else {self.error("Este pack ya contiene este beneficio.")}
     }
