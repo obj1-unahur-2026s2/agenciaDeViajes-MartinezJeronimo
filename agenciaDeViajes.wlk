@@ -20,11 +20,22 @@ class Pack {
     method paisDestino()
     method valorTotal() = self.precio() + self.beneficios().sum{n => n.costo()}
     method esPackPremiun() 
+    method cantidadCiudadesAVisitar()
+    method agregarBeneficio(beneficio) {
+        if (not self.beneficios().contains(beneficio)) {
+            self.beneficios().add(beneficio)
+        } else {self.error("Este pack ya contiene este beneficio.")}
+    }
+    method quitarBeneficio(beneficio) {
+        if (self.beneficios().contains(beneficio)){
+            self.beneficios().remove(beneficio)
+        } else {self.error("Este pack no posee este beneficio.")}
+    }
 }
 
 class Nacional inherits Pack {
     const provinciaDestino
-    const actividades = []
+    const actividades 
 
     override method actividades() = actividades
     override method eliminarActividad(actividad) {
@@ -42,6 +53,15 @@ class Nacional inherits Pack {
     override method esLugarDeInteres() {}
     override method paisDestino() {}
     override method esPackPremiun() = self.duracion() > 10 and self.coordinadorACargo().estaAltamenteCalificado()
+    override method cantidadCiudadesAVisitar() {}
+}
+
+class Provincial inherits Nacional {
+    const cantidadCiudadesAVisitar
+
+    override method cantidadCiudadesAVisitar() = cantidadCiudadesAVisitar
+    override method esPackPremiun() = self.actividades() >= 4 and self.cantidadCiudadesAVisitar() > 5 and self.beneficios().filter{n => n.estaVigente()}.count() >= 3 
+    override method precio() = if (self.esPackPremiun()) {super() * 1.05} else {super()}
 }
 
 class Internacional inherits Pack {
@@ -49,6 +69,8 @@ class Internacional inherits Pack {
     const esLugarDeInteres
     const cantidadDeEscalas
 
+    override method provinciaDestino() {}
+    override method cantidadCiudadesAVisitar() {}
     override method actividades() {}
     override method eliminarActividad(actividad) {}
     override method agregarActividad(actividad) {}
@@ -56,7 +78,7 @@ class Internacional inherits Pack {
     override method esLugarDeInteres() = esLugarDeInteres
     override method paisDestino() = paisDestino
     override method valorTotal() = super() * 1.20
-    override method esPackPremiun() = self.esLugarDeInteres() and self.duracion() > 20 and self.cantidadDeEscalas()
+    override method esPackPremiun() = self.esLugarDeInteres() and self.duracion() > 20 and self.cantidadDeEscalas() == 0
 }
 
 class Coordinador {

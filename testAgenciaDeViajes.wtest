@@ -1,0 +1,94 @@
+import agenciaDeViajes.*
+
+describe "Los test de los pack" {
+  const coordinador = new Guia(estaMotivado = true, viajesRealizados = 120, añosDeExperiencia = 3)  
+  const packNacional = new Nacional(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, actividades = 21)
+  const packNacional2 = new Nacional(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, actividades = 123)
+  const packInternacional = new Internacional(paisDestino = "Peru", esLugarDeInteres = true, cantidadDeEscalas = 40, duracion = 1, precio = 1000, coordinadorACargo = coordinador)
+
+  test "Test1 - Un pack nacional vigentes devuelve el mismo precio base." {
+    assert.equals(1000, packNacional.precio())
+  }
+
+  test "Test2 - Un pack nacional con 2 beneficios vigentes suma correctamente sus costos al precio base" {
+    const beneficio1 = new BeneficioEspecial(tipo = "Traslado VIP", costo = 200, estaVigente = true)
+    const beneficio2 = new BeneficioEspecial(tipo = "Seguros Adicionales", costo = 400, estaVigente = true)
+    packNacional2.agregarBeneficio(beneficio1)
+    packNacional2.agregarBeneficio(beneficio2)
+    assert.equals(1600, packNacional2.precio())
+  }
+
+  test "Test3 - Un pack internacional sin beneficios vigentes calcula correctamente el total con el 20% de recargo" {
+    assert.equals(1200, packInternacional.precio())
+  }
+}
+
+describe "Los test de coordinadores" {
+    const coordinador1 = new Guia(estaMotivado = true, viajesRealizados = 21, añosDeExperiencia = 3)  
+    const coordinador2 = new AsistenteLogistico(estaMotivado = true, viajesRealizados = 120111, añosDeExperiencia = 2)  
+    const coordinador3 = new Acompañante(estaMotivado = true, viajesRealizados = 1203, añosDeExperiencia = 21)
+
+    test "Test4 - Un guia motivado con 21 viajes realizados es considerado altamente calificado." {
+        assert.that(coordinador1.esAltamenteCalificado())
+    }
+    test "Test5 - Un Asistente Logistico con menos de 3 años de experiencia no es calificado, aunque tenga muchos viajes" {
+        assert.notThat(coordinador2.esAltamenteCalificado())
+    }
+    test "Test6 - Un Acompañante con cualquier cantidad de viajes es siempre calificado si supera los 20." {
+        assert.that(coordinador3.esAltamenteCalificado())
+    }
+}
+
+describe "Tests de Pack Premiun" {
+    const coordinador1 = new Guia(estaMotivado = true, viajesRealizados = 120, añosDeExperiencia = 3)
+    const coordinador2 = new AsistenteLogistico(estaMotivado = true, viajesRealizados = 120111, añosDeExperiencia = 2)
+    const nacional1 = new Nacional(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador1, actividades = 123)
+    const nacional2 = new Nacional(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador2, actividades = 312)
+    const packInternacional1 = new Internacional(paisDestino = "Peru", esLugarDeInteres = true, cantidadDeEscalas = 40, duracion = 31, precio = 1000, coordinadorACargo = coordinador1)
+    const packInternacional2 = new Internacional(paisDestino = "Peru", esLugarDeInteres = true, cantidadDeEscalas = 40, duracion = 13, precio = 1000, coordinadorACargo = coordinador1)
+
+    test "Test7 - Un pack nacional es premiun porque tiene un coordinador altamente calificado." {
+        assert.that(nacional1.esPackPremiun())
+    }
+
+    test "Test8 - Un pack nacional no es premiun porque su coordinador no es altamente calificado." {
+        assert.notThat(nacional2.esPackPremiun())
+    }
+
+    test "Test9 - Un pack internacional es premiun porque tiene mas de 20 dias de duracion." {
+        assert.that(packInternacional1.esPackPremiun())
+    }
+
+    test "Test10 - Un pack internacional no es premiun porque no tiene mas de 20 dias de duracion." {
+        assert.notThat(packInternacional2.esPackPremiun())
+    }
+}
+
+describe "Tests de Pack Provincial" {
+    const coordinador = new AsistenteLogistico(estaMotivado = true, viajesRealizados = 120111, añosDeExperiencia = 2)
+    const provincial1 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 6, actividades = 5)
+    const provincial2 = new Provincial(provinciaDestino = "Cordoba", duracion = 1, precio = 1000, coordinadorACargo = coordinador, cantidadCiudadesAVisitar = 3, actividades = 2)
+    const beneficio1 = new BeneficioEspecial(tipo = "Traslado VIP", costo = 200, estaVigente = true)
+    const beneficio2 = new BeneficioEspecial(tipo = "Seguros Adicionales", costo = 400, estaVigente = true)
+    const beneficio3 = new BeneficioEspecial(tipo = "Comida natural", costo = 400, estaVigente = true)
+    
+    test "Test11 - Un pack provincial es premiun" {
+        provincial1.agregarBeneficio(beneficio1)
+        provincial1.agregarBeneficio(beneficio2)
+        provincial1.agregarBeneficio(beneficio3)
+
+        assert.that(provincial1.esPackPremiun())
+    }
+
+    test "Test12 - Un pack provincial no es premiun" {
+        assert.notThat(provincial2.esPackPremiun())
+    }
+
+    test "Test13 - Un pack provincial premiun tiene determinado precio." {
+        assert.equals(2100, provincial1.precio())
+    }
+
+    test "Test14 - Un pack provincial no premiun tiene determiando precio." {
+        assert.equals(1000, provincial2.precio())
+    }
+}
