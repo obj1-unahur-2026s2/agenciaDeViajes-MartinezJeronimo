@@ -18,7 +18,7 @@ class Pack {
     method cantidadDeEscalas()
     method esLugarDeInteres()
     method paisDestino()
-    method valorTotal() = self.precio() + self.beneficios().sum{n => n.costo()}
+    method valorTotal() = self.precio() + self.beneficios().sum({n => n.costo()})
     method esPackPremiun() 
     method cantidadCiudadesAVisitar()
     method agregarBeneficio(beneficio) {
